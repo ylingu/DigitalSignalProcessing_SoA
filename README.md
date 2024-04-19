@@ -1,39 +1,50 @@
-# DigitalSignalProcessing
+# 数字混响师——卡拉 OK 混响系统
 
-This template should help get you started developing with Vue 3 in Vite.
+- [数字混响师——卡拉 OK 混响系统](#数字混响师——卡拉OK混响系统)
+  - [🌍 运行环境](#运行环境)
+  - [⚡️ 快速开始](#️快速开始)
+    - [1. 安装](#1-安装)
+    - [2. 使用](#2-使用)
 
-## Recommended IDE Setup
+## 🌍 运行环境
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+推荐环境：
 
-## Type Support for `.vue` Imports in TS
+- Python 3.12+
+- Poetry 1.8.2+
+- Vue 3.0+
+- pnpm 8.15.7+
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## ⚡️ 快速开始
 
-## Customize configuration
+### <a name="1"></a>1. 安装
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+克隆本项目并进入项目根目录
 
-## Project Setup
-
-```sh
-npm install
+```bash
+git clone https://github.com/ylingu/DigitalSignalProcessing_SoA.git
+cd DigitalSignalProcessing_SoA
 ```
 
-### Compile and Hot-Reload for Development
+安装依赖
 
-```sh
-npm run dev
+```bash
+cd backend && poetry install
+cd frontend && pnpm install
 ```
 
-### Type-Check, Compile and Minify for Production
+### <a name="2"></a>2. 使用
 
-```sh
-npm run build
+运行后端示例(基础实验)
+
+```bash
+cd backend
+poetry run exp
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+运行前端示例(Vue 示例)
 
-```sh
-npm run lint
+```bash
+cd frontend
+pnpm run dev
 ```

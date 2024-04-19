@@ -30,3 +30,5 @@ coverage
 
 # Python
 *.pyc
+.venv
+__pycache__/*

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+authors = ["Ylingu <wzorlite@gmail.com>"]
+package-mode = false
+packages = [{include = "dsp"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+matplotlib = "^3.8.4"
+scipy = "^1.13.0"
+
+[tool.poetry.scripts]
+exp = "dsp.processor:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff.lint]
+extend-select = ["I", "N", "PL", "UP", "E501", "NPY", "RUF100"]
+unfixable = ["F401"]
