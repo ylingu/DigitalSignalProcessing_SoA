@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 
 import matplotlib.pyplot as plt
@@ -18,8 +20,15 @@ class Signal:
         self.t = t
         self.signal = signal
         self.duration = duration
-        self.type = type
         self.sampling_rate = sampling_rate
+
+    def __add__(self, other: Signal) -> Signal:
+        if self.duration != other.duration:
+            raise ValueError("Signals must have the same duration")
+        if self.sampling_rate != other.sampling_rate:
+            raise ValueError("Signals must have the same sampling rate")
+        signal = self.signal + other.signal
+        return Signal(self.t, signal, self.duration, self.sampling_rate)
 
     def sample(self, sampling_rate: int) -> None:
         t = self.t
@@ -168,9 +177,7 @@ def main():
     Plotter([sine, sine_noise, rect_pulse, triangular, square]).plot_waveforms()
 
     sine = SignalGenerator.generate_sine_wave(1, 0.1, (0, 10))
-    sine.signal += SignalGenerator.generate_sine_wave(
-        4, 0.125, (0, 10), bias=np.pi / 2
-    ).signal
+    sine += SignalGenerator.generate_sine_wave(4, 0.125, (0, 10), bias=np.pi / 2)
     quantized_sine = copy.copy(sine)
     quantized_sine.quantize(8)
     Plotter([sine, quantized_sine]).plot_waveforms()
@@ -199,21 +206,21 @@ def main():
         signal.signal = np.fft.ifft(signal.spectrum).real
     Plotter(signals).plot_waveforms()
 
-    # sampling_rate, signal = wavfile.read("dsp/origin.wav")
-    # signal = signal[:, 0]
-    # wav = Signal(
-    #     np.linspace(0, len(signal) / sampling_rate, len(signal)),
-    #     signal,
-    #     (0, len(signal) / sampling_rate),
-    #     sampling_rate,
-    # )
-    # signals = [wav]
-    # for sampling_rate in [441, 882, 2205, 11025, 22050]:
-    #     temp = copy.copy(wav)
-    #     temp.sample(sampling_rate)
-    #     signals.append(copy.copy(temp))
-    # Plotter(signals).plot_waveforms()
-    # Plotter(signals).plot_spectrums()
+    sampling_rate, signal = wavfile.read("tests/data/origin.wav")
+    signal = signal[:, 0]
+    wav = Signal(
+        np.linspace(0, len(signal) / sampling_rate, len(signal)),
+        signal,
+        (0, len(signal) / sampling_rate),
+        sampling_rate,
+    )
+    signals = [wav]
+    for sampling_rate in [441, 882, 2205, 11025, 22050]:
+        temp = copy.copy(wav)
+        temp.sample(sampling_rate)
+        signals.append(copy.copy(temp))
+    Plotter(signals).plot_waveforms()
+    Plotter(signals).plot_spectrums()
 
 
 if __name__ == "__main__":

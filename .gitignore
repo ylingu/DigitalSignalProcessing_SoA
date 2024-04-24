@@ -31,4 +31,4 @@ coverage
 # Python
 *.pyc
 .venv
-__pycache__/*
+__pycache__

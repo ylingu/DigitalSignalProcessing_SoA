@@ -9,9 +9,16 @@ packages = [{include = "dsp"}]
 python = "^3.12"
 matplotlib = "^3.8.4"
 scipy = "^1.13.0"
+fastapi = "^0.110.2"
+uvicorn = "^0.29.0"
+sox = "^1.5.0"
 
 [tool.poetry.scripts]
 exp = "dsp.processor:main"
+start = "main:start"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
 
 [build-system]
 requires = ["poetry-core"]

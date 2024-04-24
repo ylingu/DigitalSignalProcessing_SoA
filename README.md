@@ -14,6 +14,9 @@
 - Poetry 1.8.2+
 - Vue 3.0+
 - pnpm 8.15.7+
+- sox 14.4.2+
+
+[sox 下载地址](https://www.videohelp.com/download/sox-14.4.0-libmad-libmp3lame.zip)(带有 libmad.dll 和 libmp3lame.dll，否则无法处理 mp3 文件)
 
 ## ⚡️ 快速开始
 
