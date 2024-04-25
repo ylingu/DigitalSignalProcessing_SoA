@@ -32,3 +32,8 @@ coverage
 *.pyc
 .venv
 __pycache__
+.pytest_cache
+
+# data
+input_files
+processed_files

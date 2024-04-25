@@ -12,6 +12,7 @@ scipy = "^1.13.0"
 fastapi = "^0.110.2"
 uvicorn = "^0.29.0"
 sox = "^1.5.0"
+python-multipart = "^0.0.9"
 
 [tool.poetry.scripts]
 exp = "dsp.processor:main"
