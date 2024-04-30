@@ -1,4 +1,12 @@
+import os
+
 import sox
+from fastapi import UploadFile
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROCESSED_FILES_DIRECTORY = os.path.join(BASE_DIR, "processed_files")
+
+os.makedirs(PROCESSED_FILES_DIRECTORY, exist_ok=True)
 
 
 class Reverb:
@@ -41,10 +49,26 @@ class Reverb:
 
 
 class PresetReverb(Reverb):
-    presets: dict[str, tuple[float, float, float, float, float, float]] = {
-        "default": (50, 50, 100, 100, 0, 0),
+    presets: dict[str, tuple[float, float, float, float, float, float, bool]] = {
+        "default": (50, 50, 100, 100, 0, 0, False),
     }
 
     def __init__(self, preset: str):
         super().__init__(*self.presets.get(preset, self.presets["default"]))
         self.preset = preset
+
+
+async def apply_reverb(reverb: Reverb, file: UploadFile) -> str:
+    input_file = os.path.join(BASE_DIR, file.filename)
+    with open(input_file, "wb") as f:
+        f.write(await file.read())
+    filename_without_extension, extension = os.path.splitext(file.filename)
+    # 判断reverb是否存在preset属性
+    if hasattr(reverb, "preset"):
+        filename = f"{filename_without_extension}_{reverb.preset}{extension}"
+    else:
+        filename = f"{filename_without_extension}_advanced{extension}"
+    output_file = os.path.join(PROCESSED_FILES_DIRECTORY, filename)
+    reverb.apply_reverb(input_file, output_file)
+    os.remove(input_file)
+    return output_file

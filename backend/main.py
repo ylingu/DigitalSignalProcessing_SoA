@@ -1,14 +1,17 @@
 import json
 import os
+from datetime import datetime, timedelta
 
 import uvicorn
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from dsp import reverberation as rvb
 
+DELAY_FOR_DELETION = timedelta(hours=1)
 app = FastAPI()
+cache = {}
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,25 +19,15 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     expose_headers=["Content-Disposition"],
 )
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-INPUT_FILES_DIRECTORY = os.path.join(BASE_DIR, "input_files")
-PROCESSED_FILES_DIRECTORY = os.path.join(BASE_DIR, "processed_files")
-
-os.makedirs(INPUT_FILES_DIRECTORY, exist_ok=True)
-os.makedirs(PROCESSED_FILES_DIRECTORY, exist_ok=True)
 
 
 @app.post("/reverb/advanced/")
 async def process_reverb_advanced(
     file: UploadFile = File(...),
     settings: str = Form(...),
-) -> dict[str, str]:
+) -> FileResponse:
     reverb = rvb.Reverb(**json.loads(settings))
-    input_file = os.path.join(INPUT_FILES_DIRECTORY, file.filename)
-    output_file = os.path.join(PROCESSED_FILES_DIRECTORY, file.filename)
-    with open(input_file, "wb") as f:
-        f.write(file.file.read())
-    reverb.apply_reverb(input_file, output_file)
+    output_file = await rvb.apply_reverb(reverb, file)
     return FileResponse(
         output_file,
         headers={"Content-Disposition": f"attachment; filename={file.filename}"},
@@ -45,29 +38,29 @@ async def process_reverb_advanced(
 @app.post("/reverb/")
 async def process_reverb(
     file: UploadFile = File(...), preset: str = Form(...)
-) -> dict[str, str]:
+) -> FileResponse:
+    now = datetime.now()
+    for key, value in list(cache.items()):
+        if now - datetime.fromtimestamp(os.path.getmtime(value)) > DELAY_FOR_DELETION:
+            os.remove(value)
+            cache.pop(key)
+        else:
+            break
+    cache_key = f"{file.filename}_{preset}"
+    if cache_key in cache:
+        output_file = cache[cache_key]
+        filename = os.path.basename(output_file)
+        return FileResponse(
+            output_file,
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
+            media_type="application/octet-stream",
+        )
     reverb = rvb.PresetReverb(preset)
-    input_file = os.path.join(INPUT_FILES_DIRECTORY, file.filename)
-    filename_without_extension, extension = os.path.splitext(file.filename)
-    filename = f"{filename_without_extension}_{preset}{extension}"
-    output_file = os.path.join(PROCESSED_FILES_DIRECTORY, filename)
-    with open(input_file, "wb") as f:
-        f.write(file.file.read())
-    reverb.apply_reverb(input_file, output_file)
+    output_file = await rvb.apply_reverb(reverb, file)
+    cache[cache_key] = output_file
+    filename = os.path.basename(output_file)
     return FileResponse(
         output_file,
-        headers={"Content-Disposition": f"attachment; filename={filename}"},
-        media_type="application/octet-stream",
-    )
-
-
-@app.get("/download/{filename}")
-async def download_file(filename: str) -> FileResponse:
-    file_path = os.path.join(PROCESSED_FILES_DIRECTORY, filename)
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(
-        file_path,
         headers={"Content-Disposition": f"attachment; filename={filename}"},
         media_type="application/octet-stream",
     )
