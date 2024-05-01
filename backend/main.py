@@ -1,5 +1,7 @@
 import json
 import os
+import shutil
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 
 import uvicorn
@@ -10,7 +12,16 @@ from fastapi.responses import FileResponse
 from dsp import reverberation as rvb
 
 DELAY_FOR_DELETION = timedelta(hours=1)
-app = FastAPI()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    os.makedirs(rvb.PROCESSED_FILES_DIRECTORY, exist_ok=True)
+    yield
+    shutil.rmtree(rvb.PROCESSED_FILES_DIRECTORY, ignore_errors=True)
+
+
+app = FastAPI(lifespan=lifespan)
 cache = {}
 
 app.add_middleware(

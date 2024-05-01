@@ -13,38 +13,42 @@ const extraData = ref({
 </script>
 
 <template>
-  <main>
-    <div>
+  <el-main>
+    <el-row>
       <span>Reverberance</span>
       <el-slider v-model="extraData.reverberance" :show-input=true />
-    </div>
-    <div>
+    </el-row>
+    <el-row>
       <span>Damping</span>
       <el-slider v-model="extraData.damping" :show-input=true />
-    </div>
-    <div>
+    </el-row>
+    <el-row>
       <span>Room Scale</span>
       <el-slider v-model="extraData.room_scale" :show-input=true />
-    </div>
-    <div>
+    </el-row>
+    <el-row>
       <span>Stereo Depth</span>
       <el-slider v-model="extraData.stereo_depth" :show-input=true />
-    </div>
-    <div>
+    </el-row>
+    <el-row>
       <span>Predelay</span>
       <el-slider v-model="extraData.pre_delay" :show-input=true :max="500" />
-    </div>
-    <div>
+    </el-row>
+    <el-row>
       <span>Wet Gain</span>
       <el-slider v-model="extraData.wet_gain" :show-input=true :min="-10" :max="10" :step="0.01" />
-    </div>
-    <el-col :span="3" style="margin-bottom: 20px;">
-      <span>Wet Only</span>
+    </el-row>
+    <el-row>
+      Wet Only
+    </el-row>
+    <el-row>
       <el-radio-group v-model="extraData.wet_only" size="large" style="margin-top: 10px;">
         <el-radio-button label="True" :value="true" />
         <el-radio-button label="False" :value="false" />
       </el-radio-group>
-    </el-col>
-  </main>
-  <UploadFile :uploadConfig="{ action: 'http://localhost:8000/reverb/advanced/', extraData: extraData }" />
+    </el-row>
+  </el-main>
+  <el-footer height="200px">
+    <UploadFile :uploadConfig="{ action: 'http://localhost:8000/reverb/advanced/', extraData: extraData }" />
+  </el-footer>
 </template>

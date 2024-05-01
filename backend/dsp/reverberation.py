@@ -6,8 +6,6 @@ from fastapi import UploadFile
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROCESSED_FILES_DIRECTORY = os.path.join(BASE_DIR, "processed_files")
 
-os.makedirs(PROCESSED_FILES_DIRECTORY, exist_ok=True)
-
 
 class Reverb:
     def __init__(  # noqa: PLR0913

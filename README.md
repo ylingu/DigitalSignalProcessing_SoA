@@ -1,5 +1,7 @@
 # 数字混响师——卡拉 OK 混响系统
 
+包含基础实验和一个简单的卡拉 OK 混响系统，支持多种混响预设和自定义混响参数。
+
 - [数字混响师——卡拉 OK 混响系统](#数字混响师——卡拉OK混响系统)
   - [🌍 运行环境](#运行环境)
   - [⚡️ 快速开始](#️快速开始)
@@ -10,9 +12,8 @@
 
 推荐环境：
 
-- Python 3.12+
+- Python 3.11+
 - Poetry 1.8.2+
-- Vue 3.0+
 - pnpm 8.15.7+
 - sox 14.4.2+
 
@@ -38,14 +39,14 @@ cd frontend && pnpm install
 
 ### <a name="2"></a>2. 使用
 
-运行后端示例(基础实验)
+运行后端示例
 
 ```bash
 cd backend
-poetry run exp
+poetry run start
 ```
 
-运行前端示例(Vue 示例)
+运行前端示例
 
 ```bash
 cd frontend

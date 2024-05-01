@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
-
+import { ref } from 'vue'
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `
 interface UploadConfig {
   action: string;
   extraData: Record<string, number | boolean> | string;
@@ -11,8 +20,24 @@ const props = defineProps({
     required: true
   }
 });
+const result = ref({
+  show: false,
+  icon: 'success'
+});
+const isLoading = ref(false);
+function setback() {
+  isLoading.value = false;
+  result.value.show = false;
+  result.value.icon = 'success';
+}
+function handleUploadError() {
+  isLoading.value = false;
+  result.value.icon = 'error';
+  result.value.show = true;
+}
 async function customRequest(options: any, uploadConfig: UploadConfig) {
-  const { file, onSuccess, onError } = options;
+  isLoading.value = true;
+  const { file, onError } = options;
   const formData = new FormData();
 
   formData.append('file', file);
@@ -30,6 +55,11 @@ async function customRequest(options: any, uploadConfig: UploadConfig) {
       body: formData,
     });
     if (response.ok) {
+      isLoading.value = false;
+      result.value.show = true;
+      setTimeout(() => {
+        result.value.show = false;
+      }, 1000);
       // 处理文件下载
       const blob = await response.blob(); // 获取二进制数据
       const downloadUrl = window.URL.createObjectURL(blob); // 创建下载链接
@@ -48,22 +78,27 @@ async function customRequest(options: any, uploadConfig: UploadConfig) {
       a.click(); // 触发下载
       window.URL.revokeObjectURL(downloadUrl); // 清理下载链接
       a.remove(); // 清理创建的元素
-      onSuccess({ message: 'File downloaded successfully.' });
     } else {
-      onError({ status: response.status });
+      onError(handleUploadError());
     }
   } catch (error) {
-    onError({ error });
+    onError(handleUploadError());
   }
 }
 </script>
 
 <template>
-  <main>
-    <el-upload class="upload-demo" :http-request="(options: any) => customRequest(options, props.uploadConfig)">
-      <template #trigger>
-        <el-button type="primary">选取音频文件</el-button>
-      </template>
-    </el-upload>
-  </main>
+  <el-result v-if=result.show :icon=result.icon>
+    <template #extra>
+      <el-button type="primary" @click="setback()">Back</el-button>
+    </template>
+  </el-result>
+  <el-upload :http-request="(options: any) => customRequest(options, props.uploadConfig)" :show-file-list="false" drag
+    v-loading=isLoading element-loading-text="处理中..." :element-loading-spinner="svg"
+    element-loading-svg-view-box="-10, -10, 50, 50" v-else>
+    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <div class="el-upload__text">
+      Drop file here or <em>click to upload</em>
+    </div>
+  </el-upload>
 </template>
