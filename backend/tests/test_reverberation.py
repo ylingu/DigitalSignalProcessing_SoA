@@ -13,7 +13,7 @@ ROCK_FILE = relpath("data/rock.flac")
 
 
 class TestReverb:
-    def test_default(self):
+    def test_blues(self):
         reverb = rvb.Reverb()
         assert reverb.reverberance == 50.0
         assert reverb.damping == 50.0
@@ -44,7 +44,7 @@ class TestReverb:
         assert rvb.Reverb.get_filetype(ROCK_FILE) == "flac"
 
     def test_preset_reverb(self):
-        reverb = rvb.PresetReverb("default")
+        reverb = rvb.PresetReverb("blues")
         assert reverb.reverberance == 50.0
         assert reverb.damping == 50.0
         assert reverb.room_scale == 100.0
@@ -52,4 +52,4 @@ class TestReverb:
         assert reverb.pre_delay == 0.0
         assert reverb.wet_gain == 0.0
         assert not reverb.wet_only
-        assert reverb.preset == "default"
+        assert reverb.preset == "blues"

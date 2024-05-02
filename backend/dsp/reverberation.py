@@ -47,12 +47,21 @@ class Reverb:
 
 
 class PresetReverb(Reverb):
-    presets: dict[str, tuple[float, float, float, float, float, float, bool]] = {
-        "default": (50, 50, 100, 100, 0, 0, False),
+    presets: dict[str, tuple[float, float, float, float, float, float]] = {
+        "blues": (50, 50, 100, 100, 0, 0),
+        "classical": (50, 50, 100, 100, 0, 0),
+        "country": (50, 50, 100, 100, 0, 0),
+        "disco": (50, 50, 100, 100, 0, 0),
+        "hiphop": (50, 50, 100, 100, 0, 0),
+        "jazz": (50, 50, 100, 100, 0, 0),
+        "metal": (50, 50, 100, 100, 0, 0),
+        "pop": (50, 50, 100, 100, 0, 0),
+        "reggae": (50, 50, 100, 100, 0, 0),
+        "rock": (50, 50, 100, 100, 0, 0),
     }
 
     def __init__(self, preset: str):
-        super().__init__(*self.presets.get(preset, self.presets["default"]))
+        super().__init__(*self.presets.get(preset, self.presets["blues"]))
         self.preset = preset
 
 

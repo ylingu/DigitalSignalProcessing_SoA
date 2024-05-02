@@ -39,16 +39,18 @@ cd frontend && pnpm install
 
 ### <a name="2"></a>2. 使用
 
-运行后端示例
+运行后端服务
 
 ```bash
 cd backend
 poetry run start
 ```
 
-运行前端示例
+运行前端服务
 
 ```bash
 cd frontend
 pnpm run dev
 ```
+
+在线体验: [数字混响师](https://music.ylingu.tech/)
