@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
+import { key } from './keys'
 import { RouterView } from 'vue-router'
 import { useDark, useToggle } from '@vueuse/core'
 
 const preset = ref('auto')
+provide(key, preset)
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 </script>
@@ -16,7 +18,7 @@ const toggleDark = useToggle(isDark)
           <img src="@/assets/logo.svg" />
         </el-col>
         <el-col :span="13">
-          <el-text type="primary" style="font-size: var(--el-font-size-extra-large);">
+          <el-text type="primary" style="font-size: var(--el-font-size-extra-large)">
             数字混响师
           </el-text>
         </el-col>
@@ -33,7 +35,7 @@ const toggleDark = useToggle(isDark)
           </template>
         </el-col>
       </el-row>
-      <el-menu :default-active=preset :router=true>
+      <el-menu :default-active="preset" :router="true">
         <el-menu-item index="auto" :route="{ path: '/' }" @click="preset = 'auto'">
           <el-icon :size="25">
             <svg>
@@ -133,7 +135,7 @@ const toggleDark = useToggle(isDark)
       </el-menu>
     </el-aside>
     <el-container direction="vertical">
-      <RouterView v-model="preset" />
+      <RouterView />
     </el-container>
   </el-container>
 </template>

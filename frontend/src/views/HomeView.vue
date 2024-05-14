@@ -1,23 +1,26 @@
 <script setup lang="ts">
+import { ref, inject } from 'vue'
+import type { Ref } from 'vue'
+import { key } from '../keys'
 import UploadFile from '../components/UploadFile.vue'
-const preset = defineModel({
-  type: String,
-  required: true
-})
+import ShowWave from '../components/ShowWave.vue'
+import type { FileRecord } from '../types'
+const preset = inject<Ref<string>>(key)
+const input = ref<FileRecord>()
+const output = ref<FileRecord>()
 </script>
 
 <template>
   <el-main>
-    <el-image src='https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg' fit="cover" />
+    <ShowWave v-model="input" />
+    <ShowWave v-model="output" />
   </el-main>
   <el-footer height="200px">
-    <UploadFile :uploadConfig="{ action: 'http://localhost:8000/reverb/', extraData: preset }" />
+    <UploadFile
+      :action="'http://localhost:8000/reverb/'"
+      :extraData="preset"
+      v-model:input="input"
+      v-model:output="output"
+    />
   </el-footer>
 </template>
-
-<style scoped>
-.el-image {
-  width: 100%;
-  height: 99%;
-}
-</style>

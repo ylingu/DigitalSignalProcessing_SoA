@@ -68,6 +68,5 @@ GENRE_MAP = {
 def predict(scaler: MinMaxScaler, model: XGBClassifier, y: np.ndarray) -> str:
     data = preprocess(scaler, y)
     res = model.predict(data)
-    print(res)
     genre = GENRE_MAP[res[0]]
     return genre
