@@ -34,6 +34,7 @@ onMounted(() => {
       height: 125
     })
     ws.registerPlugin(spectrogram)
+    ws.zoom(0)
   })
   ws.on('click', () => {
     ws.playPause()

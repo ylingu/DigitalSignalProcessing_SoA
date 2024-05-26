@@ -54,7 +54,6 @@ async function customRequest(options: any, uploadConfig: UploadConfig) {
       setTimeout(() => {
         result.value.show = false
       }, 1000)
-      // 处理文件下载
       const blob = await response.blob() // 获取二进制数据
       url = window.URL.createObjectURL(blob) // 创建Blob链接
       const contentDisposition = response.headers.get('Content-Disposition')

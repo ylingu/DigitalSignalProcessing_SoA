@@ -17,7 +17,7 @@ class Reverb:
         pre_delay: float = 0.0,
         wet_gain: float = 0.0,
         wet_only: bool = False,
-    ):
+    ) -> None:
         self.reverberance = reverberance
         self.damping = damping
         self.wet_gain = wet_gain
@@ -48,19 +48,19 @@ class Reverb:
 
 class PresetReverb(Reverb):
     presets: dict[str, tuple[float, float, float, float, float, float]] = {
-        "blues": (50, 50, 100, 100, 0, 0),
-        "classical": (50, 50, 100, 100, 0, 0),
-        "country": (50, 50, 100, 100, 0, 0),
-        "disco": (50, 50, 100, 100, 0, 0),
-        "hiphop": (50, 50, 100, 100, 0, 0),
-        "jazz": (50, 50, 100, 100, 0, 0),
-        "metal": (50, 50, 100, 100, 0, 0),
-        "pop": (50, 50, 100, 100, 0, 0),
-        "reggae": (50, 50, 100, 100, 0, 0),
-        "rock": (50, 50, 100, 100, 0, 0),
+        "blues": (50, 40, 50, 70, 20, 2.5),
+        "classical": (50, 75, 85, 70, 40, 3),
+        "country": (40, 50, 15, 20, 30, 1.5),
+        "disco": (50, 60, 60, 60, 5, 5),
+        "hiphop": (20, 70, 40, 30, 50, 2),
+        "jazz": (40, 50, 60, 50, 20, 3),
+        "metal": (30, 20, 60, 70, 20, 6),
+        "pop": (35, 40, 50, 50, 15, 5),
+        "reggae": (30, 50, 30, 35, 25, 4),
+        "rock": (40, 30, 60, 70, 25, 4),
     }
 
-    def __init__(self, preset: str):
+    def __init__(self, preset: str) -> None:
         super().__init__(*self.presets.get(preset, self.presets["blues"]))
         self.preset = preset
 
